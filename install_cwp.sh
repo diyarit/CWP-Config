@@ -65,9 +65,6 @@ else
 	sleep 15
         cd /usr/local/src; wget http://centos-webpanel.com/cwp-el7-latest; sh cwp-el7-latest
 	echo ""
-	echo "#############################################################################################"
-	echo "FIRST STAGE COMPLETED. RESTART THE SERVER AND RERUN THE SCRIPT AGAIN: bash $0"
-	echo "#############################################################################################"
 	exit 1
 fi
 echo "####### END INSTALLING CWP #######"
@@ -145,14 +142,14 @@ sed -i '/^#SPAMDROP/s/^#//' /etc/csf/csf.blocklists
 sed -i '/^#SPAMEDROP/s/^#//' /etc/csf/csf.blocklists
 sed -i '/^#DSHIELD/s/^#//' /etc/csf/csf.blocklists
 sed -i '/^#HONEYPOT/s/^#//' /etc/csf/csf.blocklists
-sed -i '/^#MAXMIND/s/^#//' /etc/csf/csf.blocklists
+#sed -i '/^#MAXMIND/s/^#//' /etc/csf/csf.blocklists #FALSE POSITIVES
 sed -i '/^#BDE|/s/^#//' /etc/csf/csf.blocklists
 
 sed -i '/^SPAMDROP/s/|0|/|300|/' /etc/csf/csf.blocklists
 sed -i '/^SPAMEDROP/s/|0|/|300|/' /etc/csf/csf.blocklists
 sed -i '/^DSHIELD/s/|0|/|300|/' /etc/csf/csf.blocklists
 sed -i '/^HONEYPOT/s/|0|/|300|/' /etc/csf/csf.blocklists
-sed -i '/^MAXMIND/s/|0|/|300|/' /etc/csf/csf.blocklists
+#sed -i '/^MAXMIND/s/|0|/|300|/' /etc/csf/csf.blocklists #FALSE POSITIVES
 sed -i '/^BDE|/s/|0|/|300|/' /etc/csf/csf.blocklists
 
 sed -i '/^TOR/s/^TOR/#TOR/' /etc/csf/csf.blocklists
