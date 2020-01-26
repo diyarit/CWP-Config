@@ -31,6 +31,9 @@ echo "####### CWP PRE-CONFIGURATION ##########"
 echo "Disabling yum-cron..."
 yum erase yum-cron -y
 
+echo "Removing Polkit..."
+yum erase polkit -y
+
 echo "######### CONFIGURING DNS AND NETWORK ########"
 NETWORK=$(route -n | awk '$1 == "0.0.0.0" {print $8}')
 ETHCFG="/etc/sysconfig/network-scripts/ifcfg-$NETWORK"
