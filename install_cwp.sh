@@ -280,6 +280,10 @@ sed -i '/^inet_protocols.*/d' /etc/postfix/main.cf
 echo "inet_protocols = all" >> /etc/postfix/main.cf
 service postfix restart
 
+echo "Desinstalar ClamAV..."
+service clamd stop && systemctl disable clamd
+yum remove clamav* -y
+
 history -c
 echo "" > /root/.bash_history
 
