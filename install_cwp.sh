@@ -94,7 +94,7 @@ sed -i 's/^DENY_IP_LIMIT = .*/DENY_IP_LIMIT = "400"/g' /etc/csf/csf.conf
 sed -i 's/^SAFECHAINUPDATE = .*/SAFECHAINUPDATE = "1"/g' /etc/csf/csf.conf
 sed -i 's/^CC_DENY = .*/CC_DENY = ""/g' /etc/csf/csf.conf
 sed -i 's/^CC_IGNORE = .*/CC_IGNORE = ""/g' /etc/csf/csf.conf
-# sed -i 's/^SMTP_BLOCK = .*/SMTP_BLOCK = "1"/g' /etc/csf/csf.conf # DIFFICULT BACK CONFIGURATION
+sed -i 's/^SMTP_BLOCK = .*/SMTP_BLOCK = "1"/g' /etc/csf/csf.conf # DIFFICULT BACK CONFIGURATION
 sed -i 's/^SMTP_ALLOWGROUP = .*/SMTP_ALLOWGROUP = "mail,mailman,postfix"/g' /etc/csf/csf.conf
 
 sed -i 's/^LF_FTPD = .*/LF_FTPD = "30"/g' /etc/csf/csf.conf
@@ -221,27 +221,23 @@ chkconfig lfd on
 echo "####### END CONFIGURING CSF #######"
 
 echo "Setting PHP..."
-find /usr/local/php/ /opt/alt/php-fpm*/ -name "php.ini" | xargs sed -i 's/^memory_limit.*/memory_limit = 1024M/g'
-find /usr/local/php/ /opt/alt/php-fpm*/ -name "php.ini" | xargs sed -i 's/^enable_dl.*/enable_dl = Off/g'
-find /usr/local/php/ /opt/alt/php-fpm*/ -name "php.ini" | xargs sed -i 's/^expose_php.*/expose_php = Off/g'
-find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^register_globals.*/register_globals = Off/g'
-find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^emagic_quotes_gpc.*/magic_quotes_gpc = Off/g'
-find /usr/local/php/ /opt/alt/php-fpm*/ -name "php.ini" | xargs sed -i 's/^disable_functions.*/disable_functions = apache_get_modules,apache_get_version,apache_getenv,apache_note,apache_setenv,disk_free_space,diskfreespace,dl,highlight_file,ini_alter,ini_restore,openlog,show_source,symlink,eval,debug_zval_dump/g'
-find /usr/local/php/ /opt/alt/php-fpm*/ -name "php.ini" | xargs sed -i 's/^upload_max_filesize.*/upload_max_filesize = 16M/g'
-find /usr/local/php/ /opt/alt/php-fpm*/ -name "php.ini" | xargs sed -i 's/^post_max_size.*/post_max_size = 16M/g'
-find /usr/local/php/ /opt/alt/php-fpm*/ -name "php.ini" | xargs sed -i 's/^date.timezone.*/date.timezone = "America\/Argentina\/Buenos_Aires"/g'
-find /usr/local/php/ /opt/alt/php-fpm*/ -name "php.ini" | xargs sed -i 's/^allow_url_fopen.*/allow_url_fopen = On/g'
+find /usr/local/php/ -name "php.ini" | xargs sed -i 's/^memory_limit.*/memory_limit = 1024M/g'
+find /usr/local/php/ -name "php.ini" | xargs sed -i 's/^enable_dl.*/enable_dl = Off/g'
+find /usr/local/php/ -name "php.ini" | xargs sed -i 's/^expose_php.*/expose_php = Off/g'
+find /usr/local/php/ -name "php.ini" | xargs sed -i 's/^disable_functions.*/disable_functions = apache_get_modules,apache_get_version,apache_getenv,apache_note,apache_setenv,disk_free_space,diskfreespace,dl,highlight_file,ini_alter,ini_restore,openlog,show_source,symlink,eval,debug_zval_dump/g'
+find /usr/local/php/ -name "php.ini" | xargs sed -i 's/^upload_max_filesize.*/upload_max_filesize = 16M/g'
+find /usr/local/php/ -name "php.ini" | xargs sed -i 's/^post_max_size.*/post_max_size = 16M/g'
+find /usr/local/php/ -name "php.ini" | xargs sed -i 's/^date.timezone.*/date.timezone = "America\/Argentina\/Buenos_Aires"/g'
+find /usr/local/php/ -name "php.ini" | xargs sed -i 's/^allow_url_fopen.*/allow_url_fopen = On/g'
 
-find /usr/local/php/ /opt/alt/php-fpm*/ -name "php.ini" | xargs sed -i 's/^max_execution_time.*/max_execution_time = 120/g'
-find /usr/local/php/ /opt/alt/php-fpm*/ -name "php.ini" | xargs sed -i 's/^max_input_time.*/max_input_time = 120/g'
-find /usr/local/php/ /opt/alt/php-fpm*/ -name "php.ini" | xargs sed -i 's/^max_input_vars.*/max_input_vars = 2000/g'
-find /usr/local/php/ /opt/alt/php-fpm*/ -name "php.ini" | xargs sed -i 's/^;default_charset = "UTF-8"/default_charset = "UTF-8"/g'
-find /usr/local/php/ /opt/alt/php-fpm*/ -name "php.ini" | xargs sed -i 's/^default_charset.*/default_charset = "UTF-8"/g'
+find /usr/local/php/ -name "php.ini" | xargs sed -i 's/^max_execution_time.*/max_execution_time = 120/g'
+find /usr/local/php/ -name "php.ini" | xargs sed -i 's/^max_input_time.*/max_input_time = 120/g'
+find /usr/local/php/ -name "php.ini" | xargs sed -i 's/^max_input_vars.*/max_input_vars = 2000/g'
+find /usr/local/php/ -name "php.ini" | xargs sed -i 's/^;default_charset = "UTF-8"/default_charset = "UTF-8"/g'
+find /usr/local/php/ -name "php.ini" | xargs sed -i 's/^default_charset.*/default_charset = "UTF-8"/g'
 
-find /usr/local/php/ /opt/alt/php-fpm*/ -name "php.ini" | xargs sed -i 's/^display_errors.*/display_errors = Off/g'
-find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^track_errors.*/track_errors = Off/g'
-find /opt/ \( -name "php.ini" -o -name "local.ini" \) | xargs sed -i 's/^html_errors.*/html_errors = Off/g'
-find /usr/local/php/ /opt/alt/php-fpm*/ -name "php.ini" | xargs sed -i 's/^error_reporting.*/error_reporting = E_ALL \& \~E_DEPRECATED \& \~E_STRICT/g'
+find /usr/local/php/ -name "php.ini" | xargs sed -i 's/^display_errors.*/display_errors = On/g'
+find /usr/local/php/ -name "php.ini" | xargs sed -i 's/^error_reporting.*/error_reporting = E_ALL \& \~E_DEPRECATED \& \~E_STRICT/g'
 
 echo "Setting MySQL..."
 sed -i '/^local-infile.*/d' /etc/my.cnf
@@ -280,9 +276,11 @@ sed -i '/^inet_protocols.*/d' /etc/postfix/main.cf
 echo "inet_protocols = all" >> /etc/postfix/main.cf
 service postfix restart
 
-echo "Desinstalar ClamAV..."
+echo "Uninstalling ClamAV..."
 service clamd stop && systemctl disable clamd
 yum remove clamav* -y
+
+csf -e
 
 history -c
 echo "" > /root/.bash_history
