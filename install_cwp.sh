@@ -2,6 +2,7 @@
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 HOSTNAME=$(hostname -f)
+ver="$(rpm -E %{rhel})"
 
 echo "########  #### ##    ##    ###    ########     #### ########"
 echo "##     ##  ##   ##  ##    ## ##   ##     ##     ##     ##"    
@@ -21,10 +22,39 @@ if [ ! -f /etc/redhat-release ]; then
 	exit 0
 fi
 
+if [ $ver == 6 ]; then
+	echo "CentOS installed is 6, it's not supported by CWP. Aborting"
+	exit 0
+fi
+
 echo "This script installs and pre-configures CentOS Web Panel (CTRL + C to cancel)"
 sleep 10
 
 echo "####### CONFIGURING UP CENTOS #######"
+if [ $ver == 7 ]; then
+yum update yum -y
+yum upgrade yum -y
+yum update -y
+yum upgrade -y
+yum install firewalld wget net-tools ntpdate -y
+echo "Setting server time..."
+echo "Synchronizing date with pool.ntp.org..."
+ntpdate 0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org 0.south-america.pool.ntp.org
+echo "Setting timezone to Asia/Baghdad..."
+mv /etc/localtime /etc/localtime.old
+ln -s /usr/share/zoneinfo/Asia/Baghdad /etc/localtime
+elif [ $ver == 8 ]; then
+dnf makecache
+dnf update -y
+dnf upgrade -y
+dnf install firewalld wget net-tools chrony -y
+systemctl enable chronyd
+fi
+systemctl enable firewalld
+systemctl start firewalld
+firewall-cmd --permanent --add-service=ntp
+firewall-cmd --reload
+
 wget https://raw.githubusercontent.com/diyarit/Centos-Config/master/configure_centos.sh -O "$CWD/configure_centos.sh" && bash "$CWD/configure_centos.sh"
 
 echo "####### CWP PRE-CONFIGURATION ##########"
@@ -66,7 +96,7 @@ if [ -d /usr/local/cwpsrv/ ]; then
 else
 	echo "CWP is going to be installed. At the end of the installation copy the access data that will show up to you. Then it will ask you to restart. After restarting, run this script again to finish the configuration."
 	sleep 15
-        cd /usr/local/src; wget http://centos-webpanel.com/cwp-el7-latest; sh cwp-el7-latest
+		cd /usr/local/src; wget http://centos-webpanel.com/cwp-el$ver-latest; sh cwp-el$ver-latest
 	echo ""
 	exit 1
 fi
@@ -85,7 +115,7 @@ if [ ! -d /etc/csf ]; then
 fi
 
 echo " CONFIGURING CSF..."
-yum -y install iptables-services wget perl unzip net-tools perl-libwww-perl perl-LWP-Protocol-https perl-GDGraph
+yum -y install iptables-services perl unzip perl-libwww-perl perl-LWP-Protocol-https perl-GDGraph
 
 sed -i 's/^TESTING = .*/TESTING = "0"/g' /etc/csf/csf.conf
 sed -i 's/^ICMP_IN = .*/ICMP_IN = "0"/g' /etc/csf/csf.conf
@@ -259,18 +289,6 @@ sed  -i '/\[mysqld\]/a # WNPower pre-configured values' /etc/my.cnf
 
 service mysql restart
 
-echo "Setting server time..."
-yum install ntpdate -y
-echo "Synchronizing date with pool.ntp.org..."
-ntpdate 0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org 0.south-america.pool.ntp.org
-if [ -f /usr/share/zoneinfo/America/Buenos_Aires ]; then
-        echo "Setting timezone to America/New_York..."
-        mv /etc/localtime /etc/localtime.old
-        ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
-fi
-echo "Setting BIOS date..."
-hwclock -r
-
 echo "Setting up Postfix..."
 sed -i '/^inet_protocols.*/d' /etc/postfix/main.cf
 echo "inet_protocols = all" >> /etc/postfix/main.cf
@@ -279,8 +297,6 @@ service postfix restart
 echo "Uninstalling ClamAV..."
 service clamd stop && systemctl disable clamd
 yum remove clamav* -y
-
-csf -e
 
 history -c
 echo "" > /root/.bash_history
