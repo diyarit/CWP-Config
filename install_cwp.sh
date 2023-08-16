@@ -97,8 +97,8 @@ else
 	echo "CWP is going to be installed. At the end of the installation copy the access data that will show up to you. Then it will ask you to restart. After restarting, run this script again to finish the configuration."
 	sleep 15
 		cd /usr/local/src; wget http://centos-webpanel.com/cwp-el$ver-latest; sh cwp-el$ver-latest
-	echo ""
-	exit 1
+fix exit
+
 fi
 echo "####### END INSTALLING CWP #######"
 
