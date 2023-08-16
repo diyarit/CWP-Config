@@ -242,12 +242,13 @@ sed -i "s/^TCP6_IN.*/TCP6_IN = \"$CURR_CSF_IN6,$ADDITIONAL_PORTS\"/" /etc/csf/cs
 CURR_CSF_OUT6=$(grep "^TCP6_OUT" /etc/csf/csf.conf | cut -d'=' -f2 | sed 's/\ //g' | sed 's/\"//g' | sed "s/,$ADDITIONAL_PORTS,/,/g" | sed "s/,$ADDITIONAL_PORTS//g" | sed "s/$ADDITIONAL_PORTS,//g" | sed "s/,,//g")
 sed -i "s/^TCP6_OUT.*/TCP6_OUT = \"$CURR_CSF_OUT6,$ADDITIONAL_PORTS\"/" /etc/csf/csf.conf
 
-csf -e
 
 echo "Disabling backups by default..."
-mysql -uroot root_cwp -e "UPDATE backups SET backup_enable = 'off' WHERE id='1'";
+mysql --defaults-file=/root/.my.cnf root_cwp -e "UPDATE backups SET backup_enable = 'off' WHERE id='1'"
 
-csf -r
+# Activate CSF
+/usr/sbin/csf -e
+/usr/sbin/csf -r
 service lfd restart
 chkconfig csf on
 chkconfig lfd on
