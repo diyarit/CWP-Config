@@ -248,6 +248,10 @@ mysql --defaults-file=/root/.my.cnf root_cwp -e "UPDATE backups SET backup_enabl
 # Activate CSF
 /usr/sbin/csf -e
 /usr/sbin/csf -r
+
+echo "installing Policyd..."
+sh /scripts/install_cbpolicyd
+
 service lfd restart
 chkconfig csf on
 chkconfig lfd on
